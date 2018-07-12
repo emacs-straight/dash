@@ -1,0 +1,3 @@
+*.elc
+/dash-autoloads.el
+/dash-pkg.el
