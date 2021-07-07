@@ -215,6 +215,8 @@ value rather than consuming a list to produce a single value.
 
 Reductions of one or more lists to a boolean value.
 
+* [`-some`](#-some-pred-list) `(pred list)`
+* [`-every`](#-every-pred-list) `(pred list)`
 * [`-any?`](#-any-pred-list) `(pred list)`
 * [`-all?`](#-all-pred-list) `(pred list)`
 * [`-none?`](#-none-pred-list) `(pred list)`
@@ -292,7 +294,6 @@ Other list functions not fit to be classified elsewhere.
 * [`-table`](#-table-fn-rest-lists) `(fn &rest lists)`
 * [`-table-flat`](#-table-flat-fn-rest-lists) `(fn &rest lists)`
 * [`-first`](#-first-pred-list) `(pred list)`
-* [`-some`](#-some-pred-list) `(pred list)`
 * [`-last`](#-last-pred-list) `(pred list)`
 * [`-first-item`](#-first-item-list) `(list)`
 * [`-second-item`](#-second-item-list) `(list)`
@@ -1268,6 +1269,38 @@ the new seed.
 
 Reductions of one or more lists to a boolean value.
 
+#### -some `(pred list)`
+
+Return (`pred` x) for the first `list` item where (`pred` x) is non-nil, else nil.
+
+Alias: `-any`.
+
+This function's anaphoric counterpart is `--some`.
+
+```el
+(-some #'stringp '(1 "2" 3)) ;; => t
+(--some (string-match-p "x" it) '("foo" "axe" "xor")) ;; => 1
+(--some (= it-index 3) '(0 1 2)) ;; => nil
+```
+
+#### -every `(pred list)`
+
+Return non-nil if `pred` returns non-nil for all items in `list`.
+If so, return the last such result of `pred`.  Otherwise, once an
+item is reached for which `pred` returns nil, return nil without
+calling `pred` on any further `list` elements.
+
+This function is like `-every-p`, but on success returns the last
+non-nil result of `pred` instead of just t.
+
+This function's anaphoric counterpart is `--every`.
+
+```el
+(-every #'numberp '(1 2 3)) ;; => t
+(--every (string-match-p "x" it) '("axe" "xor")) ;; => 0
+(--every (= it it-index) '(0 1 3)) ;; => nil
+```
+
 #### -any? `(pred list)`
 
 Return t if (`pred` x) is non-nil for any x in `list`, else nil.
@@ -1275,20 +1308,28 @@ Return t if (`pred` x) is non-nil for any x in `list`, else nil.
 Alias: `-any-p`, `-some?`, `-some-p`
 
 ```el
-(-any? 'even? '(1 2 3)) ;; => t
-(-any? 'even? '(1 3 5)) ;; => nil
-(-any? 'null '(1 3 5)) ;; => nil
+(-any? #'numberp '(nil 0 t)) ;; => t
+(-any? #'numberp '(nil t t)) ;; => nil
+(-any? #'null '(1 3 5)) ;; => nil
 ```
 
 #### -all? `(pred list)`
 
-Return t if (`pred` x) is non-nil for all x in `list`, else nil.
+Return t if (`pred` `x`) is non-nil for all `x` in `list`, else nil.
+In the latter case, stop after the first `x` for which (`pred` `x`) is
+nil, without calling `pred` on any subsequent elements of `list`.
 
-Alias: `-all-p`, `-every?`, `-every-p`
+The similar function [`-every`](#-every-pred-list) is more widely useful, since it
+returns the last non-nil result of `pred` instead of just t on
+success.
+
+Alias: `-all-p`, `-every-p`, `-every?`.
+
+This function's anaphoric counterpart is `--all?`.
 
 ```el
-(-all? 'even? '(1 2 3)) ;; => nil
-(-all? 'even? '(2 4 6)) ;; => t
+(-all? #'numberp '(1 2 3)) ;; => t
+(-all? #'numberp '(2 t 6)) ;; => nil
 (--all? (= 0 (% it 2)) '(2 4 6)) ;; => t
 ```
 
@@ -1439,8 +1480,8 @@ See also [`-split-when`](#-split-when-fn-list)
 
 ```el
 (-split-on '| '(Nil | Leaf a | Node [Tree a])) ;; => ((Nil) (Leaf a) (Node [Tree a]))
-(-split-on ':endgroup '("a" "b" :endgroup "c" :endgroup "d" "e")) ;; => (("a" "b") ("c") ("d" "e"))
-(-split-on ':endgroup '("a" "b" :endgroup :endgroup "d" "e")) ;; => (("a" "b") ("d" "e"))
+(-split-on :endgroup '("a" "b" :endgroup "c" :endgroup "d" "e")) ;; => (("a" "b") ("c") ("d" "e"))
+(-split-on :endgroup '("a" "b" :endgroup :endgroup "d" "e")) ;; => (("a" "b") ("d" "e"))
 ```
 
 #### -split-when `(fn list)`
@@ -1759,7 +1800,7 @@ Other list functions not fit to be classified elsewhere.
 
 #### -rotate `(n list)`
 
-Rotate `list` `n` places to the right.  With `n` negative, rotate to the left.
+Rotate `list` `n` places to the right (left if `n` is negative).
 The time complexity is O(n).
 
 ```el
@@ -2008,20 +2049,6 @@ This function's anaphoric counterpart is `--first`.
 (-first #'natnump '(-1 0 1)) ;; => 0
 (-first #'null '(1 2 3)) ;; => nil
 (--first (> it 2) '(1 2 3)) ;; => 3
-```
-
-#### -some `(pred list)`
-
-Return (`pred` x) for the first `list` item where (`pred` x) is non-nil, else nil.
-
-Alias: `-any`.
-
-This function's anaphoric counterpart is `--some`.
-
-```el
-(-some (lambda (s) (string-match-p "x" s)) '("foo" "axe" "xor")) ;; => 1
-(-some (lambda (s) (string-match-p "x" s)) '("foo" "bar" "baz")) ;; => nil
-(--some (member 'foo it) '((foo bar) (baz))) ;; => (foo bar)
 ```
 
 #### -last `(pred list)`
