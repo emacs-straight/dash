@@ -68,12 +68,12 @@ This is the anaphoric counterpart to `-each'."
   (let ((l (make-symbol "list"))
         (i (make-symbol "i")))
     `(let ((,l ,list)
-           (,i 0)
-           it it-index)
-       (ignore it it-index)
+           (,i 0))
        (while ,l
-         (setq it (pop ,l) it-index ,i ,i (1+ ,i))
-         ,@body))))
+         (let ((it (pop ,l)) (it-index ,i))
+           (ignore it it-index)
+           ,@body)
+         (setq ,i (1+ ,i))))))
 
 (defun -each (list fn)
   "Call FN on each element of LIST.
@@ -110,11 +110,16 @@ This is the anaphoric counterpart to `-each-while'."
         (elt (make-symbol "elt")))
     `(let ((,l ,list)
            (,i 0)
-           ,elt it it-index)
-       (ignore it it-index)
-       (while (and ,l (setq ,elt (car-safe ,l) it ,elt it-index ,i) ,pred)
-         (setq it ,elt it-index ,i ,i (1+ ,i) ,l (cdr ,l))
-         ,@body))))
+           ,elt)
+       (while (when ,l
+                (setq ,elt (car-safe ,l))
+                (let ((it ,elt) (it-index ,i))
+                  (ignore it it-index)
+                  ,pred))
+         (let ((it ,elt) (it-index ,i))
+           (ignore it it-index)
+           ,@body)
+         (setq ,i (1+ ,i) ,l (cdr ,l))))))
 
 (defun -each-while (list pred fn)
   "Call FN on each ITEM in LIST, while (PRED ITEM) is non-nil.
@@ -778,7 +783,7 @@ This can be useful as an alternative to the `,@' construct in a
 marked positions (for example with keywords).
 
 This is the anaphoric counterpart to `-splice'."
-  (declare (debug (def-form def-form form)))
+  (declare (debug (form form form)))
   (let ((r (make-symbol "result")))
     `(let (,r)
        (--each ,list
@@ -853,14 +858,16 @@ This is the anaphoric counterpart to `-first'."
 (defun -first (pred list)
   "Return the first item in LIST for which PRED returns non-nil.
 Return nil if no such element is found.
-To get the first item in the list no questions asked, use `car'.
+
+To get the first item in the list no questions asked,
+use `-first-item'.
 
 Alias: `-find'.
 
 This function's anaphoric counterpart is `--first'."
   (--first (funcall pred it) list))
 
-(defalias '-find '-first)
+(defalias '-find #'-first)
 (defalias '--find '--first)
 
 (defmacro --some (form list)
@@ -1021,7 +1028,7 @@ See also: `-first-item', etc."
 
 (defun ---truthy? (obj)
   "Return OBJ as a boolean value (t or nil)."
-  (declare (pure t) (side-effect-free t))
+  (declare (pure t) (side-effect-free error-free))
   (and obj t))
 
 (defmacro --any? (form list)
@@ -1775,54 +1782,88 @@ See also: `-flatten-n', `-table'"
         (dash--table-carry lists restore-lists)))
     (nreverse re)))
 
-(defun -elem-index (elem list)
-  "Return the index of the first element in the given LIST which
-is equal to the query element ELEM, or nil if there is no
-such element."
-  (declare (pure t) (side-effect-free t))
-  (car (-elem-indices elem list)))
-
-(defun -elem-indices (elem list)
-  "Return the indices of all elements in LIST equal to the query
-element ELEM, in ascending order."
-  (declare (pure t) (side-effect-free t))
-  (-find-indices (-partial 'equal elem) list))
-
-(defun -find-indices (pred list)
-  "Return the indices of all elements in LIST satisfying the
-predicate PRED, in ascending order."
-  (apply 'append (--map-indexed (when (funcall pred it) (list it-index)) list)))
-
-(defmacro --find-indices (form list)
-  "Anaphoric version of `-find-indices'."
-  (declare (debug (def-form form)))
-  `(-find-indices (lambda (it) (ignore it) ,form) ,list))
+(defmacro --find-index (form list)
+  "Return the first index in LIST for which FORM evals to non-nil.
+Return nil if no such index is found.
+Each element of LIST in turn is bound to `it' and its index
+within LIST to `it-index' before evaluating FORM.
+This is the anaphoric counterpart to `-find-index'."
+  (declare (debug (form form)))
+  `(--some (and ,form it-index) ,list))
 
 (defun -find-index (pred list)
-  "Take a predicate PRED and a LIST and return the index of the
-first element in the list satisfying the predicate, or nil if
-there is no such element.
+  "Return the index of the first item satisfying PRED in LIST.
+Return nil if no such item is found.
 
-See also `-first'."
-  (car (-find-indices pred list)))
+PRED is called with one argument, the current list element, until
+it returns non-nil, at which point the search terminates.
 
-(defmacro --find-index (form list)
-  "Anaphoric version of `-find-index'."
-  (declare (debug (def-form form)))
-  `(-find-index (lambda (it) (ignore it) ,form) ,list))
+This function's anaphoric counterpart is `--find-index'.
 
-(defun -find-last-index (pred list)
-  "Take a predicate PRED and a LIST and return the index of the
-last element in the list satisfying the predicate, or nil if
-there is no such element.
+See also: `-first', `-find-last-index'."
+  (--find-index (funcall pred it) list))
 
-See also `-last'."
-  (-last-item (-find-indices pred list)))
+(defun -elem-index (elem list)
+  "Return the first index of ELEM in LIST.
+That is, the index within LIST of the first element that is
+`equal' to ELEM.  Return nil if there is no such element.
+
+See also: `-find-index'."
+  (declare (pure t) (side-effect-free t))
+  (--find-index (equal elem it) list))
+
+(defmacro --find-indices (form list)
+  "Return the list of indices in LIST for which FORM evals to non-nil.
+Each element of LIST in turn is bound to `it' and its index
+within LIST to `it-index' before evaluating FORM.
+This is the anaphoric counterpart to `-find-indices'."
+  (declare (debug (form form)))
+  `(--keep (and ,form it-index) ,list))
+
+(defun -find-indices (pred list)
+  "Return the list of indices in LIST satisfying PRED.
+
+Each element of LIST in turn is passed to PRED.  If the result is
+non-nil, the index of that element in LIST is included in the
+result.  The returned indices are in ascending order, i.e., in
+the same order as they appear in LIST.
+
+This function's anaphoric counterpart is `--find-indices'.
+
+See also: `-find-index', `-elem-indices'."
+  (--find-indices (funcall pred it) list))
+
+(defun -elem-indices (elem list)
+  "Return the list of indices at which ELEM appears in LIST.
+That is, the indices of all elements of LIST `equal' to ELEM, in
+the same ascending order as they appear in LIST."
+  (declare (pure t) (side-effect-free t))
+  (--find-indices (equal elem it) list))
 
 (defmacro --find-last-index (form list)
-  "Anaphoric version of `-find-last-index'."
-  (declare (debug (def-form form)))
-  `(-find-last-index (lambda (it) (ignore it) ,form) ,list))
+  "Return the last index in LIST for which FORM evals to non-nil.
+Return nil if no such index is found.
+Each element of LIST in turn is bound to `it' and its index
+within LIST to `it-index' before evaluating FORM.
+This is the anaphoric counterpart to `-find-last-index'."
+  (declare (debug (form form)))
+  (let ((i (make-symbol "index")))
+    `(let (,i)
+       (--each ,list
+         (when ,form (setq ,i it-index)))
+       ,i)))
+
+(defun -find-last-index (pred list)
+  "Return the index of the last item satisfying PRED in LIST.
+Return nil if no such item is found.
+
+Predicate PRED is called with one argument each time, namely the
+current list element.
+
+This function's anaphoric counterpart is `--find-last-index'.
+
+See also: `-last', `-find-index'."
+  (--find-last-index (funcall pred it) list))
 
 (defun -select-by-indices (indices list)
   "Return a list whose elements are elements from LIST selected
@@ -2840,7 +2881,7 @@ In this case, if ARG is not a list, a new list with all of
 ARGS as elements is returned.  This use is supported for
 backward compatibility and is otherwise deprecated."
   (declare (advertised-calling-convention (arg) "2.18.0")
-           (pure t) (side-effect-free t))
+           (pure t) (side-effect-free error-free))
   (if (listp arg) arg (cons arg args)))
 
 (defun -repeat (n x)
@@ -2969,7 +3010,7 @@ the new seed."
 That is, a cons (A . B) where B is not a list.
 
 Alias: `-cons-pair-p'."
-  (declare (pure t) (side-effect-free t))
+  (declare (pure t) (side-effect-free error-free))
   (nlistp (cdr-safe obj)))
 
 (defalias '-cons-pair-p '-cons-pair?)
@@ -3157,14 +3198,14 @@ is a new function which does the same as FN, except that the last
 N arguments are fixed at the values with which this function was
 called.  This is like `-partial', except the arguments are fixed
 starting from the right rather than the left."
-  (declare (pure t) (side-effect-free t))
+  (declare (pure t) (side-effect-free error-free))
   (lambda (&rest args-before) (apply fn (append args-before args))))
 
 (defun -juxt (&rest fns)
   "Return a function that is the juxtaposition of FNS.
 The returned function takes a variable number of ARGS, applies
 each of FNS in turn to ARGS, and returns the list of results."
-  (declare (pure t) (side-effect-free t))
+  (declare (pure t) (side-effect-free error-free))
   (lambda (&rest args) (mapcar (lambda (x) (apply x args)) fns)))
 
 (defun -compose (&rest fns)
@@ -3174,7 +3215,7 @@ the last function in FNS to ARGS, and returns the result of
 calling each remaining function on the result of the previous
 function, right-to-left.  If no FNS are given, return a variadic
 `identity' function."
-  (declare (pure t) (side-effect-free t))
+  (declare (pure t) (side-effect-free error-free))
   (let* ((fns (nreverse fns))
          (head (car fns))
          (tail (cdr fns)))
@@ -3188,7 +3229,7 @@ function, right-to-left.  If no FNS are given, return a variadic
   "Return a function that applies FN to a single list of args.
 This changes the arity of FN from taking N distinct arguments to
 taking 1 argument which is a list of N arguments."
-  (declare (pure t) (side-effect-free t))
+  (declare (pure t) (side-effect-free error-free))
   (lambda (args) (apply fn args)))
 
 (defun -on (op trans)
@@ -3202,7 +3243,7 @@ equivalent:
 
   (funcall (-on #\\='+ #\\='1+) 1 2 3) = (+ (1+ 1) (1+ 2) (1+ 3))
   (funcall (-on #\\='+ #\\='1+))       = (+)"
-  (declare (pure t) (side-effect-free t))
+  (declare (pure t) (side-effect-free error-free))
   (lambda (&rest args)
     ;; This unrolling seems to be a relatively cheap way to keep the
     ;; overhead of `mapcar' + `apply' in check.
@@ -3224,7 +3265,7 @@ equivalent:
   (funcall (-flip #\\='-) 1 2) = (- 2 1)
 
 See also: `-rotate-args'."
-  (declare (pure t) (side-effect-free t))
+  (declare (pure t) (side-effect-free error-free))
   (lambda (&rest args) ;; Open-code for speed.
     (cond ((cddr args) (apply fn (nreverse args)))
           ((cdr args) (funcall fn (cadr args) (car args)))
@@ -3257,7 +3298,7 @@ See also: `-flip'."
   "Return a function that returns C ignoring any additional arguments.
 
 In types: a -> b -> a"
-  (declare (pure t) (side-effect-free t))
+  (declare (pure t) (side-effect-free error-free))
   (lambda (&rest _) c))
 
 (defmacro -cut (&rest params)
@@ -3283,7 +3324,7 @@ The returned predicate passes its arguments to PRED.  If PRED
 returns nil, the result is non-nil; otherwise the result is nil.
 
 See also: `-andfn' and `-orfn'."
-  (declare (pure t) (side-effect-free t))
+  (declare (pure t) (side-effect-free error-free))
   (lambda (&rest args) (not (apply pred args))))
 
 (defun -orfn (&rest preds)
@@ -3295,7 +3336,7 @@ the remaining PREDS.  If all PREDS return nil, or if no PREDS are
 given, the returned predicate returns nil.
 
 See also: `-andfn' and `-not'."
-  (declare (pure t) (side-effect-free t))
+  (declare (pure t) (side-effect-free error-free))
   ;; Open-code for speed.
   (cond ((cdr preds) (lambda (&rest args) (--some (apply it args) preds)))
         (preds (car preds))
@@ -3310,7 +3351,7 @@ remaining PREDS.  If all PREDS return non-nil, P returns the last
 such value.  If no PREDS are given, P always returns non-nil.
 
 See also: `-orfn' and `-not'."
-  (declare (pure t) (side-effect-free t))
+  (declare (pure t) (side-effect-free error-free))
   ;; Open-code for speed.
   (cond ((cdr preds) (lambda (&rest args) (--every (apply it args) preds)))
         (preds (car preds))
