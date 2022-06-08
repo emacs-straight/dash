@@ -202,6 +202,7 @@ Functions reducing lists to a single value (which may also be a list).
 * [`-min-by`](#-min-by-comparator-list) `(comparator list)`
 * [`-max`](#-max-list) `(list)`
 * [`-max-by`](#-max-by-comparator-list) `(comparator list)`
+* [`-frequencies`](#-frequencies-list) `(list)`
 
 ### Unfolding
 
@@ -222,7 +223,6 @@ Reductions of one or more lists to a boolean value.
 * [`-none?`](#-none-pred-list) `(pred list)`
 * [`-only-some?`](#-only-some-pred-list) `(pred list)`
 * [`-contains?`](#-contains-list-element) `(list element)`
-* [`-same-items?`](#-same-items-list-list2) `(list list2)`
 * [`-is-prefix?`](#-is-prefix-prefix-list) `(prefix list)`
 * [`-is-suffix?`](#-is-suffix-suffix-list) `(suffix list)`
 * [`-is-infix?`](#-is-infix-infix-list) `(infix list)`
@@ -266,12 +266,13 @@ related predicates.
 
 Operations pretending lists are sets.
 
-* [`-union`](#-union-list-list2) `(list list2)`
-* [`-difference`](#-difference-list-list2) `(list list2)`
-* [`-intersection`](#-intersection-list-list2) `(list list2)`
+* [`-union`](#-union-list1-list2) `(list1 list2)`
+* [`-difference`](#-difference-list1-list2) `(list1 list2)`
+* [`-intersection`](#-intersection-list1-list2) `(list1 list2)`
 * [`-powerset`](#-powerset-list) `(list)`
 * [`-permutations`](#-permutations-list) `(list)`
 * [`-distinct`](#-distinct-list) `(list)`
+* [`-same-items?`](#-same-items-list1-list2) `(list1 list2)`
 
 ### Other list operations
 
@@ -1241,6 +1242,24 @@ comparing them.
 (--max-by (> (length it) (length other)) '((1 2 3) (2) (3 2))) ;; => (1 2 3)
 ```
 
+#### -frequencies `(list)`
+
+Count the occurrences of each distinct element of `list`.
+
+Return an alist of (`element` . `n`), where each `element` occurs `n`
+times in `list`.
+
+The test for equality is done with `equal`, or with `-compare-fn`
+if that is non-`nil`.
+
+See also [`-count`](#-count-pred-list) and [`-group-by`](#-group-by-fn-list).
+
+```el
+(-frequencies ()) ;; => ()
+(-frequencies '(1 2 3 1 2 1)) ;; => ((1 . 3) (2 . 2) (3 . 1))
+(let ((-compare-fn #'string=)) (-frequencies '(a "a"))) ;; => ((a . 2))
+```
+
 ## Unfolding
 
 Operations dual to reductions, building lists from a seed
@@ -1380,28 +1399,15 @@ Alias: `-only-some-p`
 Return non-`nil` if `list` contains `element`.
 
 The test for equality is done with `equal`, or with `-compare-fn`
-if that's non-`nil`.
+if that is non-`nil`.  As with `member`, the return value is
+actually the tail of `list` whose car is `element`.
 
-Alias: `-contains-p`
-
-```el
-(-contains? '(1 2 3) 1) ;; => t
-(-contains? '(1 2 3) 2) ;; => t
-(-contains? '(1 2 3) 4) ;; => nil
-```
-
-#### -same-items? `(list list2)`
-
-Return true if `list` and `list2` has the same items.
-
-The order of the elements in the lists does not matter.
-
-Alias: `-same-items-p`
+Alias: `-contains-p`.
 
 ```el
-(-same-items? '(1 2 3) '(1 2 3)) ;; => t
-(-same-items? '(1 2 3) '(3 2 1)) ;; => t
-(-same-items? '(1 2 3) '(1 2 3 4)) ;; => nil
+(-contains? '(1 2 3) 1) ;; => (1 2 3)
+(-contains? '(1 2 3) 2) ;; => (2 3)
+(-contains? '(1 2 3) 4) ;; => ()
 ```
 
 #### -is-prefix? `(prefix list)`
@@ -1774,23 +1780,25 @@ permutation to `list` sorts it in descending order.
 
 Operations pretending lists are sets.
 
-#### -union `(list list2)`
+#### -union `(list1 list2)`
 
-Return a new list of all elements appearing in either `list1` or `list2`.
-Equality is defined by the value of `-compare-fn` if non-`nil`;
-otherwise `equal`.
+Return a new list of distinct elements appearing in either `list1` or `list2`.
+
+The test for equality is done with `equal`, or with `-compare-fn`
+if that is non-`nil`.
 
 ```el
 (-union '(1 2 3) '(3 4 5)) ;; => (1 2 3 4 5)
-(-union '(1 2 3 4) ()) ;; => (1 2 3 4)
-(-union '(1 1 2 2) '(3 2 1)) ;; => (1 1 2 2 3)
+(-union '(1 2 2 4) ()) ;; => (1 2 4)
+(-union '(1 1 2 2) '(4 4 3 2 1)) ;; => (1 2 4 3)
 ```
 
-#### -difference `(list list2)`
+#### -difference `(list1 list2)`
 
-Return a new list with only the members of `list` that are not in `list2`.
-The test for equality is done with `equal`,
-or with `-compare-fn` if that's non-`nil`.
+Return a new list with the distinct members of `list1` that are not in `list2`.
+
+The test for equality is done with `equal`, or with `-compare-fn`
+if that is non-`nil`.
 
 ```el
 (-difference () ()) ;; => ()
@@ -1798,16 +1806,17 @@ or with `-compare-fn` if that's non-`nil`.
 (-difference '(1 2 3 4) '(3 4 5 6)) ;; => (1 2)
 ```
 
-#### -intersection `(list list2)`
+#### -intersection `(list1 list2)`
 
-Return a new list of the elements appearing in both `list1` and `list2`.
-Equality is defined by the value of `-compare-fn` if non-`nil`;
-otherwise `equal`.
+Return a new list of distinct elements appearing in both `list1` and `list2`.
+
+The test for equality is done with `equal`, or with `-compare-fn`
+if that is non-`nil`.
 
 ```el
 (-intersection () ()) ;; => ()
 (-intersection '(1 2 3) '(4 5 6)) ;; => ()
-(-intersection '(1 2 3 4) '(3 4 5 6)) ;; => (3 4)
+(-intersection '(1 2 2 3) '(4 3 3 2)) ;; => (2 3)
 ```
 
 #### -powerset `(list)`
@@ -1816,31 +1825,53 @@ Return the power set of `list`.
 
 ```el
 (-powerset ()) ;; => (nil)
+(-powerset '(x y)) ;; => ((x y) (x) (y) nil)
 (-powerset '(x y z)) ;; => ((x y z) (x y) (x z) (x) (y z) (y) (z) nil)
 ```
 
 #### -permutations `(list)`
 
-Return the permutations of `list`.
+Return the distinct permutations of `list`.
+
+Duplicate elements of `list` are determined by `equal`, or by
+`-compare-fn` if that is non-`nil`.
 
 ```el
 (-permutations ()) ;; => (nil)
-(-permutations '(1 2)) ;; => ((1 2) (2 1))
+(-permutations '(a a b)) ;; => ((a a b) (a b a) (b a a))
 (-permutations '(a b c)) ;; => ((a b c) (a c b) (b a c) (b c a) (c a b) (c b a))
 ```
 
 #### -distinct `(list)`
 
-Return a new list with all duplicates removed.
-The test for equality is done with `equal`,
-or with `-compare-fn` if that's non-`nil`.
+Return a copy of `list` with all duplicate elements removed.
 
-Alias: `-uniq`
+The test for equality is done with `equal`, or with `-compare-fn`
+if that is non-`nil`.
+
+Alias: `-uniq`.
 
 ```el
 (-distinct ()) ;; => ()
-(-distinct '(1 2 2 4)) ;; => (1 2 4)
+(-distinct '(1 1 2 3 3)) ;; => (1 2 3)
 (-distinct '(t t t)) ;; => (t)
+```
+
+#### -same-items? `(list1 list2)`
+
+Return non-`nil` if `list1` and `list2` have the same distinct elements.
+
+The order of the elements in the lists does not matter.  The
+lists may be of different lengths, i.e., contain duplicate
+elements.  The test for equality is done with `equal`, or with
+`-compare-fn` if that is non-`nil`.
+
+Alias: `-same-items-p`.
+
+```el
+(-same-items? '(1 2 3) '(1 2 3)) ;; => t
+(-same-items? '(1 1 2 3) '(3 3 2 1)) ;; => t
+(-same-items? '(1 2 3) '(1 2 3 4)) ;; => nil
 ```
 
 ## Other list operations
