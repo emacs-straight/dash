@@ -211,6 +211,8 @@ value rather than consuming a list to produce a single value.
 
 * [`-iterate`](#-iterate-fun-init-n) `(fun init n)`
 * [`-unfold`](#-unfold-fun-seed) `(fun seed)`
+* [`-repeat`](#-repeat-n-x) `(n x)`
+* [`-cycle`](#-cycle-list) `(list)`
 
 ### Predicates
 
@@ -279,7 +281,6 @@ Operations pretending lists are sets.
 Other list functions not fit to be classified elsewhere.
 
 * [`-rotate`](#-rotate-n-list) `(n list)`
-* [`-repeat`](#-repeat-n-x) `(n x)`
 * [`-cons*`](#-cons-rest-args) `(&rest args)`
 * [`-snoc`](#-snoc-list-elem-rest-elements) `(list elem &rest elements)`
 * [`-interpose`](#-interpose-sep-list) `(sep list)`
@@ -290,7 +291,6 @@ Other list functions not fit to be classified elsewhere.
 * [`-zip-lists`](#-zip-lists-rest-lists) `(&rest lists)`
 * [`-zip-fill`](#-zip-fill-fill-value-rest-lists) `(fill-value &rest lists)`
 * [`-unzip`](#-unzip-lists) `(lists)`
-* [`-cycle`](#-cycle-list) `(list)`
 * [`-pad`](#-pad-fill-value-rest-lists) `(fill-value &rest lists)`
 * [`-table`](#-table-fn-rest-lists) `(fn &rest lists)`
 * [`-table-flat`](#-table-flat-fn-rest-lists) `(fn &rest lists)`
@@ -467,13 +467,18 @@ For a side-effecting variant, see also [`-each-indexed`](#-each-indexed-list-fn)
 
 #### -annotate `(fn list)`
 
-Return a list of cons cells where each cell is `fn` applied to each
-element of `list` paired with the unmodified element of `list`.
+Pair each item in `list` with the result of passing it to `fn`.
+
+Return an alist of (`result` . `item`), where each `item` is the
+corresponding element of `list`, and `result` is the value obtained
+by calling `fn` on `item`.
+
+This function's anaphoric counterpart is `--annotate`.
 
 ```el
-(-annotate '1+ '(1 2 3)) ;; => ((2 . 1) (3 . 2) (4 . 3))
-(-annotate 'length '(("h" "e" "l" "l" "o") ("hello" "world"))) ;; => ((5 "h" "e" "l" "l" "o") (2 "hello" "world"))
-(--annotate (< 1 it) '(0 1 2 3)) ;; => ((nil . 0) (nil . 1) (t . 2) (t . 3))
+(-annotate #'1+ '(1 2 3)) ;; => ((2 . 1) (3 . 2) (4 . 3))
+(-annotate #'length '((f o o) (bar baz))) ;; => ((3 f o o) (2 bar baz))
+(--annotate (> it 1) '(0 1 2 3)) ;; => ((nil . 0) (nil . 1) (t . 2) (t . 3))
 ```
 
 #### -splice `(pred fun list)`
@@ -1299,6 +1304,29 @@ the new seed.
 (--unfold (when it (cons it (butlast it))) '(1 2 3 4)) ;; => ((1 2 3 4) (1 2 3) (1 2) (1))
 ```
 
+#### -repeat `(n x)`
+
+Return a new list of length `n` with each element being `x`.
+Return `nil` if `n` is less than 1.
+
+```el
+(-repeat 3 :a) ;; => (:a :a :a)
+(-repeat 1 :a) ;; => (:a)
+(-repeat 0 :a) ;; => ()
+```
+
+#### -cycle `(list)`
+
+Return an infinite circular copy of `list`.
+The returned list cycles through the elements of `list` and repeats
+from the beginning.
+
+```el
+(-take 5 (-cycle '(1 2 3))) ;; => (1 2 3 1 2)
+(-take 7 (-cycle '(1 "and" 3))) ;; => (1 "and" 3 1 "and" 3 1)
+(-zip (-cycle '(1 2 3)) '(1 2)) ;; => ((1 . 1) (2 . 2))
+```
+
 ## Predicates
 
 Reductions of one or more lists to a boolean value.
@@ -1889,17 +1917,6 @@ The time complexity is O(n).
 (-rotate 16 '(1 2 3 4 5 6 7)) ;; => (6 7 1 2 3 4 5)
 ```
 
-#### -repeat `(n x)`
-
-Return a new list of length `n` with each element being `x`.
-Return `nil` if `n` is less than 1.
-
-```el
-(-repeat 3 :a) ;; => (:a :a :a)
-(-repeat 1 :a) ;; => (:a)
-(-repeat 0 :a) ;; => nil
-```
-
 #### -cons* `(&rest args)`
 
 Make a new list from the elements of `args`.
@@ -2049,27 +2066,18 @@ See also: [`-zip`](#-zip-rest-lists)
 (-unzip '((1 2) (3 4))) ;; => ((1 . 3) (2 . 4))
 ```
 
-#### -cycle `(list)`
-
-Return an infinite circular copy of `list`.
-The returned list cycles through the elements of `list` and repeats
-from the beginning.
-
-```el
-(-take 5 (-cycle '(1 2 3))) ;; => (1 2 3 1 2)
-(-take 7 (-cycle '(1 "and" 3))) ;; => (1 "and" 3 1 "and" 3 1)
-(-zip (-cycle '(1 2 3)) '(1 2)) ;; => ((1 . 1) (2 . 2))
-```
-
 #### -pad `(fill-value &rest lists)`
 
-Appends `fill-value` to the end of each list in `lists` such that they
-will all have the same length.
+Pad each of `lists` with `fill-value` until they all have equal lengths.
+
+Ensure all `lists` are as long as the longest one by repeatedly
+appending `fill-value` to the shorter lists, and return the
+resulting `lists`.
 
 ```el
 (-pad 0 ()) ;; => (nil)
-(-pad 0 '(1)) ;; => ((1))
-(-pad 0 '(1 2 3) '(4 5)) ;; => ((1 2 3) (4 5 0))
+(-pad 0 '(1 2) '(3 4)) ;; => ((1 2) (3 4))
+(-pad 0 '(1 2) '(3 4 5 6) '(7 8 9)) ;; => ((1 2 0 0) (3 4 5 6) (7 8 9 0))
 ```
 
 #### -table `(fn &rest lists)`

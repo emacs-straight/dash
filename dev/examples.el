@@ -101,9 +101,33 @@ new list."
     (--map-indexed t '()) => '())
 
   (defexamples -annotate
-    (-annotate '1+ '(1 2 3)) => '((2 . 1) (3 . 2) (4 . 3))
-    (-annotate 'length '(("h" "e" "l" "l" "o") ("hello" "world"))) => '((5 . ("h" "e" "l" "l" "o")) (2 . ("hello" "world")))
-    (--annotate (< 1 it) '(0 1 2 3)) => '((nil . 0) (nil . 1) (t . 2) (t . 3)))
+    (-annotate #'1+ '(1 2 3)) => '((2 . 1) (3 . 2) (4 . 3))
+    (-annotate #'length '((f o o) (bar baz))) => '((3 f o o) (2 bar baz))
+    (--annotate (> it 1) '(0 1 2 3)) => '((nil . 0) (nil . 1) (t . 2) (t . 3))
+    (--annotate nil ()) => ()
+    (--annotate nil '(a)) => '((nil . a))
+    (--annotate nil '((a))) => '((nil a))
+    (--annotate t ()) => ()
+    (--annotate t '(a)) => '((t . a))
+    (--annotate t '((a))) => '((t a))
+    (--annotate it ()) => ()
+    (--annotate it '(a)) => '((a . a))
+    (--annotate it '((a))) => '(((a) a))
+    (--annotate (list it) ()) => ()
+    (--annotate (list it) '(a)) => '(((a) . a))
+    (--annotate (list it) '((a))) => '((((a)) a))
+    (-annotate #'ignore ()) => ()
+    (-annotate #'ignore '(a)) => '((nil . a))
+    (-annotate #'ignore '((a))) => '((nil a))
+    (-annotate (-andfn) ()) => ()
+    (-annotate (-andfn) '(a)) => '((t . a))
+    (-annotate (-andfn) '((a))) => '((t a))
+    (-annotate #'identity ()) => ()
+    (-annotate #'identity '(a)) => '((a . a))
+    (-annotate #'identity '((a))) => '(((a) a))
+    (-annotate #'list ()) => ()
+    (-annotate #'list '(a)) => '(((a) . a))
+    (-annotate #'list '((a))) => '((((a)) a)))
 
   (defexamples -splice
     (-splice #'numberp (lambda (n) (list n n)) '(a 1 b 2)) => '(a 1 1 b 2 2)
@@ -697,7 +721,25 @@ value rather than consuming a list to produce a single value."
   (defexamples -unfold
     (-unfold (lambda (x) (unless (= x 0) (cons x (1- x)))) 10) => '(10 9 8 7 6 5 4 3 2 1)
     (--unfold (when it (cons it (cdr it))) '(1 2 3 4)) => '((1 2 3 4) (2 3 4) (3 4) (4))
-    (--unfold (when it (cons it (butlast it))) '(1 2 3 4)) => '((1 2 3 4) (1 2 3) (1 2) (1))))
+    (--unfold (when it (cons it (butlast it))) '(1 2 3 4)) => '((1 2 3 4) (1 2 3) (1 2) (1)))
+
+  (defexamples -repeat
+    (-repeat 3 :a) => '(:a :a :a)
+    (-repeat 1 :a) => '(:a)
+    (-repeat 0 :a) => '()
+    (-repeat -1 :a) => ()
+    (-repeat -1 ()) => ()
+    (-repeat 0 ()) => ()
+    (-repeat 1 ()) => '(())
+    (-repeat 2 ()) => '(() ()))
+
+  (defexamples -cycle
+    (-take 5 (-cycle '(1 2 3))) => '(1 2 3 1 2)
+    (-take 7 (-cycle '(1 "and" 3))) => '(1 "and" 3 1 "and" 3 1)
+    (-zip (-cycle '(1 2 3)) '(1 2)) => '((1 . 1) (2 . 2))
+    (-zip-with #'cons (-cycle '(1 2 3)) '(1 2)) => '((1 . 1) (2 . 2))
+    (-map (-partial #'-take 5) (-split-at 5 (-cycle '(1 2 3)))) => '((1 2 3 1 2) (3 1 2 3 1))
+    (let ((l (list 1))) (eq l (-cycle l))) => nil))
 
 (def-example-group "Predicates"
   "Reductions of one or more lists to a boolean value."
@@ -1385,12 +1427,6 @@ related predicates."
     (-rotate 5 '(1 2 3)) => '(2 3 1)
     (-rotate 6 '(1 2 3)) => '(1 2 3))
 
-  (defexamples -repeat
-    (-repeat 3 :a) => '(:a :a :a)
-    (-repeat 1 :a) => '(:a)
-    (-repeat 0 :a) => nil
-    (-repeat -1 :a) => nil)
-
   (defexamples -cons*
     (-cons* 1 2) => '(1 . 2)
     (-cons* 1 2 3) => '(1 2 . 3)
@@ -1460,20 +1496,19 @@ related predicates."
     (-unzip '((1 2) (3 4) (5 6) (7 8) (9 10))) => '((1 3 5 7 9) (2 4 6 8 10))
     (-unzip '((1 2) (3 4))) => '((1 . 3) (2 . 4)))
 
-  (defexamples -cycle
-    (-take 5 (-cycle '(1 2 3))) => '(1 2 3 1 2)
-    (-take 7 (-cycle '(1 "and" 3))) => '(1 "and" 3 1 "and" 3 1)
-    (-zip (-cycle '(1 2 3)) '(1 2)) => '((1 . 1) (2 . 2))
-    (-zip-with #'cons (-cycle '(1 2 3)) '(1 2)) => '((1 . 1) (2 . 2))
-    (-map (-partial #'-take 5) (-split-at 5 (-cycle '(1 2 3)))) => '((1 2 3 1 2) (3 1 2 3 1))
-    (let ((l (list 1))) (eq l (-cycle l))) => nil)
-
   (defexamples -pad
     (-pad 0 '()) => '(())
+    (-pad 0 '(1 2) '(3 4)) => '((1 2) (3 4))
+    (-pad 0 '(1 2) '(3 4 5 6) '(7 8 9)) => '((1 2 0 0) (3 4 5 6) (7 8 9 0))
+    (-pad 0) => ()
+    (-pad 0 () ()) => '(() ())
     (-pad 0 '(1)) => '((1))
+    (-pad 0 '(1) '(1)) => '((1) (1))
     (-pad 0 '(1 2 3) '(4 5)) => '((1 2 3) (4 5 0))
-    (-pad nil '(1 2 3) '(4 5) '(6 7 8 9 10)) => '((1 2 3 nil nil) (4 5 nil nil nil) (6 7 8 9 10))
-    (-pad 0 '(1 2) '(3 4)) => '((1 2) (3 4)))
+    (-pad nil ()) => '(())
+    (-pad nil () ()) => '(() ())
+    (-pad nil '(nil nil) '(nil) '(nil nil nil nil nil))
+    => '((nil nil nil nil nil) (nil nil nil nil nil) (nil nil nil nil nil)))
 
   (defexamples -table
     (-table '* '(1 2 3) '(1 2 3)) => '((1 2 3) (2 4 6) (3 6 9))
