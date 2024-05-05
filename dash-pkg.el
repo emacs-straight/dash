@@ -1,0 +1,2 @@
+;; Generated package description from dash.el  -*- no-byte-compile: t -*-
+(define-package "dash" "2.19.1.0.20240405.94636" "A modern list library for Emacs" '((emacs "24")) :commit "885332bbc4582b08d4f24526250876f3a7569067" :authors '(("Magnar Sveen" . "magnars@gmail.com")) :maintainer '("Magnar Sveen" . "magnars@gmail.com") :keywords '("extensions" "lisp") :url "https://github.com/magnars/dash.el")
