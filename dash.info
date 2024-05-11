@@ -1,4 +1,4 @@
-This is docio79F1.info, produced by makeinfo version 6.8 from dash.texi.
+This is docAyiFaK.info, produced by makeinfo version 6.8 from dash.texi.
 
 This manual is for Dash version 2.19.1.
 
@@ -17,7 +17,7 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 
-File: docio79F1.info,  Node: Top,  Next: Installation,  Up: (dir)
+File: docAyiFaK.info,  Node: Top,  Next: Installation,  Up: (dir)
 
 Dash
 ****
@@ -79,7 +79,7 @@ Development
 * Contributors::        List of contributors.
 
 
-File: docio79F1.info,  Node: Installation,  Next: Functions,  Prev: Top,  Up: Top
+File: docAyiFaK.info,  Node: Installation,  Next: Functions,  Prev: Top,  Up: Top
 
 1 Installation
 **************
@@ -102,7 +102,7 @@ somewhere (*note (emacs)Lisp Libraries::).
 * Info symbol lookup::  Looking up Dash symbols in this manual.
 
 
-File: docio79F1.info,  Node: Using in a package,  Next: Fontification of special variables,  Up: Installation
+File: docAyiFaK.info,  Node: Using in a package,  Next: Fontification of special variables,  Up: Installation
 
 1.1 Using in a package
 ======================
@@ -113,7 +113,7 @@ in the library’s headers as follows (*note (elisp)Library Headers::).
      ;; Package-Requires: ((dash "2.19.1"))
 
 
-File: docio79F1.info,  Node: Fontification of special variables,  Next: Info symbol lookup,  Prev: Using in a package,  Up: Installation
+File: docAyiFaK.info,  Node: Fontification of special variables,  Next: Info symbol lookup,  Prev: Using in a package,  Up: Installation
 
 1.2 Fontification of special variables
 ======================================
@@ -131,7 +131,7 @@ either interactively or from your ‘user-init-file’:
      (global-dash-fontify-mode)
 
 
-File: docio79F1.info,  Node: Info symbol lookup,  Prev: Fontification of special variables,  Up: Installation
+File: docAyiFaK.info,  Node: Info symbol lookup,  Prev: Fontification of special variables,  Up: Installation
 
 1.3 Info symbol lookup
 ======================
@@ -146,7 +146,7 @@ automatically from your ‘user-init-file’.  For example:
        (dash-register-info-lookup))
 
 
-File: docio79F1.info,  Node: Functions,  Next: Development,  Prev: Installation,  Up: Top
+File: docAyiFaK.info,  Node: Functions,  Next: Development,  Prev: Installation,  Up: Top
 
 2 Functions
 ***********
@@ -202,7 +202,7 @@ following example, which demonstrates the utility of both versions.
 * Function combinators::
 
 
-File: docio79F1.info,  Node: Maps,  Next: Sublist selection,  Up: Functions
+File: docAyiFaK.info,  Node: Maps,  Next: Sublist selection,  Up: Functions
 
 2.1 Maps
 ========
@@ -361,7 +361,7 @@ The results are collected in order and returned as a new list.
               ⇒ nil
 
 
-File: docio79F1.info,  Node: Sublist selection,  Next: List to list,  Prev: Maps,  Up: Functions
+File: docAyiFaK.info,  Node: Sublist selection,  Next: List to list,  Prev: Maps,  Up: Functions
 
 2.2 Sublist selection
 =====================
@@ -616,7 +616,7 @@ Functions returning a sublist of the original list.
               ⇒ (2 b :b)
 
 
-File: docio79F1.info,  Node: List to list,  Next: Reductions,  Prev: Sublist selection,  Up: Functions
+File: docAyiFaK.info,  Node: List to list,  Next: Reductions,  Prev: Sublist selection,  Up: Functions
 
 2.3 List to list
 ================
@@ -805,7 +805,7 @@ Functions returning a modified copy of the input list.
               ⇒ (b d)
 
 
-File: docio79F1.info,  Node: Reductions,  Next: Unfolding,  Prev: List to list,  Up: Functions
+File: docAyiFaK.info,  Node: Reductions,  Next: Unfolding,  Prev: List to list,  Up: Functions
 
 2.4 Reductions
 ==============
@@ -1134,7 +1134,7 @@ Functions reducing lists to a single value (which may also be a list).
               ⇒ ((a . 2))
 
 
-File: docio79F1.info,  Node: Unfolding,  Next: Predicates,  Prev: Reductions,  Up: Functions
+File: docAyiFaK.info,  Node: Unfolding,  Next: Predicates,  Prev: Reductions,  Up: Functions
 
 2.5 Unfolding
 =============
@@ -1200,7 +1200,7 @@ than consuming a list to produce a single value.
               ⇒ ((3 1) (3 2))
 
 
-File: docio79F1.info,  Node: Predicates,  Next: Partitioning,  Prev: Unfolding,  Up: Functions
+File: docAyiFaK.info,  Node: Predicates,  Next: Partitioning,  Prev: Unfolding,  Up: Functions
 
 2.6 Predicates
 ==============
@@ -1367,7 +1367,7 @@ Reductions of one or more lists to a boolean value.
               ⇒ nil
 
 
-File: docio79F1.info,  Node: Partitioning,  Next: Indexing,  Prev: Predicates,  Up: Functions
+File: docAyiFaK.info,  Node: Partitioning,  Next: Indexing,  Prev: Predicates,  Up: Functions
 
 2.7 Partitioning
 ================
@@ -1583,7 +1583,7 @@ Functions partitioning the input list into a list of lists.
               ⇒ (("a" "a/b" "a/e") ("c" "c/d"))
 
 
-File: docio79F1.info,  Node: Indexing,  Next: Set operations,  Prev: Partitioning,  Up: Functions
+File: docAyiFaK.info,  Node: Indexing,  Next: Set operations,  Prev: Partitioning,  Up: Functions
 
 2.8 Indexing
 ============
@@ -1696,7 +1696,7 @@ predicates.
               ⇒ (4 3 3 3 2 1 1)
 
 
-File: docio79F1.info,  Node: Set operations,  Next: Other list operations,  Prev: Indexing,  Up: Functions
+File: docAyiFaK.info,  Node: Set operations,  Next: Other list operations,  Prev: Indexing,  Up: Functions
 
 2.9 Set operations
 ==================
@@ -1802,7 +1802,7 @@ Operations pretending lists are sets.
               ⇒ nil
 
 
-File: docio79F1.info,  Node: Other list operations,  Next: Tree operations,  Prev: Set operations,  Up: Functions
+File: docAyiFaK.info,  Node: Other list operations,  Next: Tree operations,  Prev: Set operations,  Up: Functions
 
 2.10 Other list operations
 ==========================
@@ -2257,7 +2257,7 @@ Other list functions not fit to be classified elsewhere.
               ⇒ (jedi starwars warrior scifi book)
 
 
-File: docio79F1.info,  Node: Tree operations,  Next: Threading macros,  Prev: Other list operations,  Up: Functions
+File: docAyiFaK.info,  Node: Tree operations,  Next: Threading macros,  Prev: Other list operations,  Up: Functions
 
 2.11 Tree operations
 ====================
@@ -2388,7 +2388,7 @@ Functions pretending lists are trees.
               ⇒ ((1))
 
 
-File: docio79F1.info,  Node: Threading macros,  Next: Binding,  Prev: Tree operations,  Up: Functions
+File: docAyiFaK.info,  Node: Threading macros,  Next: Binding,  Prev: Tree operations,  Up: Functions
 
 2.12 Threading macros
 =====================
@@ -2427,7 +2427,7 @@ readability.
 
      Insert X at the position signified by the symbol ‘it’ in the first
      form.  If there are more forms, insert the first form at the
-     position signified by ‘it’ in in second form, etc.
+     position signified by ‘it’ in the second form, etc.
 
           (--> "def" (concat "abc" it "ghi"))
               ⇒ "abcdefghi"
@@ -2500,7 +2500,7 @@ readability.
               ⇒ v
 
 
-File: docio79F1.info,  Node: Binding,  Next: Side effects,  Prev: Threading macros,  Up: Functions
+File: docAyiFaK.info,  Node: Binding,  Next: Side effects,  Prev: Threading macros,  Up: Functions
 
 2.13 Binding
 ============
@@ -2795,7 +2795,7 @@ control.
               ⇒ "c"
 
 
-File: docio79F1.info,  Node: Side effects,  Next: Destructive operations,  Prev: Binding,  Up: Functions
+File: docAyiFaK.info,  Node: Side effects,  Next: Destructive operations,  Prev: Binding,  Up: Functions
 
 2.14 Side effects
 =================
@@ -2889,7 +2889,7 @@ Functions iterating over lists for side effect only.
               ⇒ (4 3 2 1 0)
 
 
-File: docio79F1.info,  Node: Destructive operations,  Next: Function combinators,  Prev: Side effects,  Up: Functions
+File: docAyiFaK.info,  Node: Destructive operations,  Next: Function combinators,  Prev: Side effects,  Up: Functions
 
 2.15 Destructive operations
 ===========================
@@ -2913,7 +2913,7 @@ Macros that modify variables holding lists.
               ⇒ (5)
 
 
-File: docio79F1.info,  Node: Function combinators,  Prev: Destructive operations,  Up: Functions
+File: docAyiFaK.info,  Node: Function combinators,  Prev: Destructive operations,  Up: Functions
 
 2.16 Function combinators
 =========================
@@ -3202,7 +3202,7 @@ Functions that manipulate and compose other functions.
               ⇒ 6
 
 
-File: docio79F1.info,  Node: Development,  Next: FDL,  Prev: Functions,  Up: Top
+File: docAyiFaK.info,  Node: Development,  Next: FDL,  Prev: Functions,  Up: Top
 
 3 Development
 *************
@@ -3216,7 +3216,7 @@ The Dash repository is hosted on GitHub at
 * Contributors::        List of contributors.
 
 
-File: docio79F1.info,  Node: Contribute,  Next: Contributors,  Up: Development
+File: docAyiFaK.info,  Node: Contribute,  Next: Contributors,  Up: Development
 
 3.1 Contribute
 ==============
@@ -3241,7 +3241,7 @@ require that all contributors assign copyright to the Free Software
 Foundation.  For more on this, *note (emacs)Copyright Assignment::.
 
 
-File: docio79F1.info,  Node: Contributors,  Prev: Contribute,  Up: Development
+File: docAyiFaK.info,  Node: Contributors,  Prev: Contribute,  Up: Development
 
 3.2 Contributors
 ================
@@ -3285,7 +3285,7 @@ File: docio79F1.info,  Node: Contributors,  Prev: Contribute,  Up: Development
    New contributors are very welcome.  *Note Contribute::.
 
 
-File: docio79F1.info,  Node: FDL,  Next: GPL,  Prev: Development,  Up: Top
+File: docAyiFaK.info,  Node: FDL,  Next: GPL,  Prev: Development,  Up: Top
 
 Appendix A GNU Free Documentation License
 *****************************************
@@ -3767,7 +3767,7 @@ software license, such as the GNU General Public License, to permit
 their use in free software.
 
 
-File: docio79F1.info,  Node: GPL,  Next: Index,  Prev: FDL,  Up: Top
+File: docAyiFaK.info,  Node: GPL,  Next: Index,  Prev: FDL,  Up: Top
 
 Appendix B GNU General Public License
 *************************************
@@ -4483,7 +4483,7 @@ GNU Lesser General Public License instead of this License.  But first,
 please read <https://www.gnu.org/licenses/why-not-lgpl.html>.
 
 
-File: docio79F1.info,  Node: Index,  Prev: GPL,  Up: Top
+File: docAyiFaK.info,  Node: Index,  Prev: GPL,  Up: Top
 
 Index
 *****
@@ -4892,53 +4892,53 @@ Node: Threading macros84531
 Ref: ->84761
 Ref: ->>85249
 Ref: -->85752
-Ref: -as->86308
-Ref: -some->86762
-Ref: -some->>87147
-Ref: -some-->87594
-Ref: -doto88161
-Node: Binding88714
-Ref: -when-let88926
-Ref: -when-let*89387
-Ref: -if-let89916
-Ref: -if-let*90282
-Ref: -let90905
-Ref: -let*96995
-Ref: -lambda97932
-Ref: -setq98738
-Node: Side effects99539
-Ref: -each99738
-Ref: -each-while100265
-Ref: -each-indexed100885
-Ref: -each-r101477
-Ref: -each-r-while101919
-Ref: -dotimes102563
-Node: Destructive operations103116
-Ref: !cons103339
-Ref: !cdr103543
-Node: Function combinators103736
-Ref: -partial103945
-Ref: -rpartial104463
-Ref: -juxt105111
-Ref: -compose105563
-Ref: -applify106170
-Ref: -on106600
-Ref: -flip107372
-Ref: -rotate-args107896
-Ref: -const108525
-Ref: -cut108867
-Ref: -not109347
-Ref: -orfn109891
-Ref: -andfn110684
-Ref: -iteratefn111471
-Ref: -fixfn112173
-Ref: -prodfn113747
-Node: Development114898
-Node: Contribute115192
-Node: Contributors116209
-Node: FDL118307
-Node: GPL143632
-Node: Index181386
+Ref: -as->86309
+Ref: -some->86763
+Ref: -some->>87148
+Ref: -some-->87595
+Ref: -doto88162
+Node: Binding88715
+Ref: -when-let88927
+Ref: -when-let*89388
+Ref: -if-let89917
+Ref: -if-let*90283
+Ref: -let90906
+Ref: -let*96996
+Ref: -lambda97933
+Ref: -setq98739
+Node: Side effects99540
+Ref: -each99739
+Ref: -each-while100266
+Ref: -each-indexed100886
+Ref: -each-r101478
+Ref: -each-r-while101920
+Ref: -dotimes102564
+Node: Destructive operations103117
+Ref: !cons103340
+Ref: !cdr103544
+Node: Function combinators103737
+Ref: -partial103946
+Ref: -rpartial104464
+Ref: -juxt105112
+Ref: -compose105564
+Ref: -applify106171
+Ref: -on106601
+Ref: -flip107373
+Ref: -rotate-args107897
+Ref: -const108526
+Ref: -cut108868
+Ref: -not109348
+Ref: -orfn109892
+Ref: -andfn110685
+Ref: -iteratefn111472
+Ref: -fixfn112174
+Ref: -prodfn113748
+Node: Development114899
+Node: Contribute115193
+Node: Contributors116210
+Node: FDL118308
+Node: GPL143633
+Node: Index181387
 
 End Tag Table
 
