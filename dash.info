@@ -1,8 +1,8 @@
-This is docAyiFaK.info, produced by makeinfo version 6.8 from dash.texi.
+This is doc2KgZE0.info, produced by makeinfo version 6.8 from dash.texi.
 
-This manual is for Dash version 2.19.1.
+This manual is for Dash version 2.20.0.
 
-   Copyright © 2012–2024 Free Software Foundation, Inc.
+   Copyright © 2012–2025 Free Software Foundation, Inc.
 
      Permission is granted to copy, distribute and/or modify this
      document under the terms of the GNU Free Documentation License,
@@ -17,14 +17,14 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 
-File: docAyiFaK.info,  Node: Top,  Next: Installation,  Up: (dir)
+File: doc2KgZE0.info,  Node: Top,  Next: Installation,  Up: (dir)
 
 Dash
 ****
 
-This manual is for Dash version 2.19.1.
+This manual is for Dash version 2.20.0.
 
-   Copyright © 2012–2024 Free Software Foundation, Inc.
+   Copyright © 2012–2025 Free Software Foundation, Inc.
 
      Permission is granted to copy, distribute and/or modify this
      document under the terms of the GNU Free Documentation License,
@@ -79,7 +79,7 @@ Development
 * Contributors::        List of contributors.
 
 
-File: docAyiFaK.info,  Node: Installation,  Next: Functions,  Prev: Top,  Up: Top
+File: doc2KgZE0.info,  Node: Installation,  Next: Functions,  Prev: Top,  Up: Top
 
 1 Installation
 **************
@@ -102,7 +102,7 @@ somewhere (*note (emacs)Lisp Libraries::).
 * Info symbol lookup::  Looking up Dash symbols in this manual.
 
 
-File: docAyiFaK.info,  Node: Using in a package,  Next: Fontification of special variables,  Up: Installation
+File: doc2KgZE0.info,  Node: Using in a package,  Next: Fontification of special variables,  Up: Installation
 
 1.1 Using in a package
 ======================
@@ -110,10 +110,10 @@ File: docAyiFaK.info,  Node: Using in a package,  Next: Fontification of special
 If you use Dash in your own package, be sure to list it as a dependency
 in the library’s headers as follows (*note (elisp)Library Headers::).
 
-     ;; Package-Requires: ((dash "2.19.1"))
+     ;; Package-Requires: ((dash "2.20.0"))
 
 
-File: docAyiFaK.info,  Node: Fontification of special variables,  Next: Info symbol lookup,  Prev: Using in a package,  Up: Installation
+File: doc2KgZE0.info,  Node: Fontification of special variables,  Next: Info symbol lookup,  Prev: Using in a package,  Up: Installation
 
 1.2 Fontification of special variables
 ======================================
@@ -131,7 +131,7 @@ either interactively or from your ‘user-init-file’:
      (global-dash-fontify-mode)
 
 
-File: docAyiFaK.info,  Node: Info symbol lookup,  Prev: Fontification of special variables,  Up: Installation
+File: doc2KgZE0.info,  Node: Info symbol lookup,  Prev: Fontification of special variables,  Up: Installation
 
 1.3 Info symbol lookup
 ======================
@@ -146,7 +146,7 @@ automatically from your ‘user-init-file’.  For example:
        (dash-register-info-lookup))
 
 
-File: docAyiFaK.info,  Node: Functions,  Next: Development,  Prev: Installation,  Up: Top
+File: doc2KgZE0.info,  Node: Functions,  Next: Development,  Prev: Installation,  Up: Top
 
 2 Functions
 ***********
@@ -202,7 +202,7 @@ following example, which demonstrates the utility of both versions.
 * Function combinators::
 
 
-File: docAyiFaK.info,  Node: Maps,  Next: Sublist selection,  Up: Functions
+File: doc2KgZE0.info,  Node: Maps,  Next: Sublist selection,  Up: Functions
 
 2.1 Maps
 ========
@@ -353,7 +353,8 @@ The results are collected in order and returned as a new list.
               ⇒ (0 1 0 2 0 3)
 
  -- Function: -copy (list)
-     Create a shallow copy of LIST.
+     Create a shallow copy of LIST.  The elements of LIST are not
+     copied; they are shared with the original.
 
           (-copy '(1 2 3))
               ⇒ (1 2 3)
@@ -361,7 +362,7 @@ The results are collected in order and returned as a new list.
               ⇒ nil
 
 
-File: docAyiFaK.info,  Node: Sublist selection,  Next: List to list,  Prev: Maps,  Up: Functions
+File: doc2KgZE0.info,  Node: Sublist selection,  Next: List to list,  Prev: Maps,  Up: Functions
 
 2.2 Sublist selection
 =====================
@@ -616,7 +617,7 @@ Functions returning a sublist of the original list.
               ⇒ (2 b :b)
 
 
-File: docAyiFaK.info,  Node: List to list,  Next: Reductions,  Prev: Sublist selection,  Up: Functions
+File: doc2KgZE0.info,  Node: List to list,  Next: Reductions,  Prev: Sublist selection,  Up: Functions
 
 2.3 List to list
 ================
@@ -639,12 +640,17 @@ Functions returning a modified copy of the input list.
               ⇒ (40 50 60)
 
  -- Function: -concat (&rest sequences)
-     Concatenate all the arguments and make the result a list.  The
-     result is a list whose elements are the elements of all the
-     arguments.  Each argument may be a list, vector or string.
+     Concatenate all SEQUENCES and make the result a list.  The result
+     is a list whose elements are the elements of all the arguments.
+     Each argument may be a list, vector or string.
 
      All arguments except the last argument are copied.  The last
-     argument is just used as the tail of the new list.
+     argument is just used as the tail of the new list.  If the last
+     argument is not a list, this results in a dotted list.
+
+     As an exception, if all the arguments except the last are ‘nil’,
+     and the last argument is not a list, the return value is that last
+     argument unaltered, not a list.
 
           (-concat '(1))
               ⇒ (1)
@@ -805,7 +811,7 @@ Functions returning a modified copy of the input list.
               ⇒ (b d)
 
 
-File: docAyiFaK.info,  Node: Reductions,  Next: Unfolding,  Prev: List to list,  Up: Functions
+File: doc2KgZE0.info,  Node: Reductions,  Next: Unfolding,  Prev: List to list,  Up: Functions
 
 2.4 Reductions
 ==============
@@ -1134,7 +1140,7 @@ Functions reducing lists to a single value (which may also be a list).
               ⇒ ((a . 2))
 
 
-File: docAyiFaK.info,  Node: Unfolding,  Next: Predicates,  Prev: Reductions,  Up: Functions
+File: doc2KgZE0.info,  Node: Unfolding,  Next: Predicates,  Prev: Reductions,  Up: Functions
 
 2.5 Unfolding
 =============
@@ -1200,7 +1206,7 @@ than consuming a list to produce a single value.
               ⇒ ((3 1) (3 2))
 
 
-File: docAyiFaK.info,  Node: Predicates,  Next: Partitioning,  Prev: Unfolding,  Up: Functions
+File: doc2KgZE0.info,  Node: Predicates,  Next: Partitioning,  Prev: Unfolding,  Up: Functions
 
 2.6 Predicates
 ==============
@@ -1367,7 +1373,7 @@ Reductions of one or more lists to a boolean value.
               ⇒ nil
 
 
-File: docAyiFaK.info,  Node: Partitioning,  Next: Indexing,  Prev: Predicates,  Up: Functions
+File: doc2KgZE0.info,  Node: Partitioning,  Next: Indexing,  Prev: Predicates,  Up: Functions
 
 2.7 Partitioning
 ================
@@ -1583,7 +1589,7 @@ Functions partitioning the input list into a list of lists.
               ⇒ (("a" "a/b" "a/e") ("c" "c/d"))
 
 
-File: docAyiFaK.info,  Node: Indexing,  Next: Set operations,  Prev: Partitioning,  Up: Functions
+File: doc2KgZE0.info,  Node: Indexing,  Next: Set operations,  Prev: Partitioning,  Up: Functions
 
 2.8 Indexing
 ============
@@ -1696,7 +1702,7 @@ predicates.
               ⇒ (4 3 3 3 2 1 1)
 
 
-File: docAyiFaK.info,  Node: Set operations,  Next: Other list operations,  Prev: Indexing,  Up: Functions
+File: doc2KgZE0.info,  Node: Set operations,  Next: Other list operations,  Prev: Indexing,  Up: Functions
 
 2.9 Set operations
 ==================
@@ -1802,7 +1808,7 @@ Operations pretending lists are sets.
               ⇒ nil
 
 
-File: docAyiFaK.info,  Node: Other list operations,  Next: Tree operations,  Prev: Set operations,  Up: Functions
+File: doc2KgZE0.info,  Node: Other list operations,  Next: Tree operations,  Prev: Set operations,  Up: Functions
 
 2.10 Other list operations
 ==========================
@@ -2257,7 +2263,7 @@ Other list functions not fit to be classified elsewhere.
               ⇒ (jedi starwars warrior scifi book)
 
 
-File: docAyiFaK.info,  Node: Tree operations,  Next: Threading macros,  Prev: Other list operations,  Up: Functions
+File: doc2KgZE0.info,  Node: Tree operations,  Next: Threading macros,  Prev: Other list operations,  Up: Functions
 
 2.11 Tree operations
 ====================
@@ -2388,7 +2394,7 @@ Functions pretending lists are trees.
               ⇒ ((1))
 
 
-File: docAyiFaK.info,  Node: Threading macros,  Next: Binding,  Prev: Tree operations,  Up: Functions
+File: doc2KgZE0.info,  Node: Threading macros,  Next: Binding,  Prev: Tree operations,  Up: Functions
 
 2.12 Threading macros
 =====================
@@ -2500,7 +2506,7 @@ readability.
               ⇒ v
 
 
-File: docAyiFaK.info,  Node: Binding,  Next: Side effects,  Prev: Threading macros,  Up: Functions
+File: doc2KgZE0.info,  Node: Binding,  Next: Side effects,  Prev: Threading macros,  Up: Functions
 
 2.13 Binding
 ============
@@ -2795,7 +2801,7 @@ control.
               ⇒ "c"
 
 
-File: docAyiFaK.info,  Node: Side effects,  Next: Destructive operations,  Prev: Binding,  Up: Functions
+File: doc2KgZE0.info,  Node: Side effects,  Next: Destructive operations,  Prev: Binding,  Up: Functions
 
 2.14 Side effects
 =================
@@ -2889,7 +2895,7 @@ Functions iterating over lists for side effect only.
               ⇒ (4 3 2 1 0)
 
 
-File: docAyiFaK.info,  Node: Destructive operations,  Next: Function combinators,  Prev: Side effects,  Up: Functions
+File: doc2KgZE0.info,  Node: Destructive operations,  Next: Function combinators,  Prev: Side effects,  Up: Functions
 
 2.15 Destructive operations
 ===========================
@@ -2913,7 +2919,7 @@ Macros that modify variables holding lists.
               ⇒ (5)
 
 
-File: docAyiFaK.info,  Node: Function combinators,  Prev: Destructive operations,  Up: Functions
+File: doc2KgZE0.info,  Node: Function combinators,  Prev: Destructive operations,  Up: Functions
 
 2.16 Function combinators
 =========================
@@ -3202,7 +3208,7 @@ Functions that manipulate and compose other functions.
               ⇒ 6
 
 
-File: docAyiFaK.info,  Node: Development,  Next: FDL,  Prev: Functions,  Up: Top
+File: doc2KgZE0.info,  Node: Development,  Next: FDL,  Prev: Functions,  Up: Top
 
 3 Development
 *************
@@ -3216,7 +3222,7 @@ The Dash repository is hosted on GitHub at
 * Contributors::        List of contributors.
 
 
-File: docAyiFaK.info,  Node: Contribute,  Next: Contributors,  Up: Development
+File: doc2KgZE0.info,  Node: Contribute,  Next: Contributors,  Up: Development
 
 3.1 Contribute
 ==============
@@ -3241,7 +3247,7 @@ require that all contributors assign copyright to the Free Software
 Foundation.  For more on this, *note (emacs)Copyright Assignment::.
 
 
-File: docAyiFaK.info,  Node: Contributors,  Prev: Contribute,  Up: Development
+File: doc2KgZE0.info,  Node: Contributors,  Prev: Contribute,  Up: Development
 
 3.2 Contributors
 ================
@@ -3285,7 +3291,7 @@ File: docAyiFaK.info,  Node: Contributors,  Prev: Contribute,  Up: Development
    New contributors are very welcome.  *Note Contribute::.
 
 
-File: docAyiFaK.info,  Node: FDL,  Next: GPL,  Prev: Development,  Up: Top
+File: doc2KgZE0.info,  Node: FDL,  Next: GPL,  Prev: Development,  Up: Top
 
 Appendix A GNU Free Documentation License
 *****************************************
@@ -3767,7 +3773,7 @@ software license, such as the GNU General Public License, to permit
 their use in free software.
 
 
-File: docAyiFaK.info,  Node: GPL,  Next: Index,  Prev: FDL,  Up: Top
+File: doc2KgZE0.info,  Node: GPL,  Next: Index,  Prev: FDL,  Up: Top
 
 Appendix B GNU General Public License
 *************************************
@@ -4483,7 +4489,7 @@ GNU Lesser General Public License instead of this License.  But first,
 please read <https://www.gnu.org/licenses/why-not-lgpl.html>.
 
 
-File: docAyiFaK.info,  Node: Index,  Prev: GPL,  Up: Top
+File: doc2KgZE0.info,  Node: Index,  Prev: GPL,  Up: Top
 
 Index
 *****
@@ -4554,8 +4560,8 @@ Index
                                                               (line 445)
 * -fixfn:                                Function combinators.
                                                               (line 224)
-* -flatten:                              List to list.        (line  38)
-* -flatten-n:                            List to list.        (line  60)
+* -flatten:                              List to list.        (line  43)
+* -flatten-n:                            List to list.        (line  65)
 * -flip:                                 Function combinators.
                                                               (line  95)
 * -fourth-item:                          Other list operations.
@@ -4567,7 +4573,7 @@ Index
 * -if-let:                               Binding.             (line  34)
 * -if-let*:                              Binding.             (line  45)
 * -inits:                                Reductions.          (line 222)
-* -insert-at:                            List to list.        (line 114)
+* -insert-at:                            List to list.        (line 119)
 * -interleave:                           Other list operations.
                                                               (line  56)
 * -interpose:                            Other list operations.
@@ -4640,16 +4646,16 @@ Index
 * -reductions-r:                         Reductions.          (line 154)
 * -reductions-r-from:                    Reductions.          (line 118)
 * -remove:                               Sublist selection.   (line  26)
-* -remove-at:                            List to list.        (line 151)
-* -remove-at-indices:                    List to list.        (line 170)
+* -remove-at:                            List to list.        (line 156)
+* -remove-at-indices:                    List to list.        (line 175)
 * -remove-first:                         Sublist selection.   (line  44)
 * -remove-item:                          Sublist selection.   (line  84)
 * -remove-last:                          Sublist selection.   (line  65)
 * -repeat:                               Unfolding.           (line  44)
-* -replace:                              List to list.        (line  72)
-* -replace-at:                           List to list.        (line 125)
-* -replace-first:                        List to list.        (line  86)
-* -replace-last:                         List to list.        (line 100)
+* -replace:                              List to list.        (line  77)
+* -replace-at:                           List to list.        (line 130)
+* -replace-first:                        List to list.        (line  91)
+* -replace-last:                         List to list.        (line 105)
 * -rotate:                               Other list operations.
                                                               (line   8)
 * -rotate-args:                          Function combinators.
@@ -4705,7 +4711,7 @@ Index
                                                               (line 215)
 * -unzip-lists:                          Other list operations.
                                                               (line 196)
-* -update-at:                            List to list.        (line 137)
+* -update-at:                            List to list.        (line 142)
 * -when-let:                             Binding.             (line   9)
 * -when-let*:                            Binding.             (line  21)
 * -zip:                                  Other list operations.
@@ -4746,199 +4752,199 @@ Ref: -splice10120
 Ref: -splice-list11195
 Ref: -mapcat11654
 Ref: -copy12027
-Node: Sublist selection12215
-Ref: -filter12413
-Ref: -remove12966
-Ref: -remove-first13515
-Ref: -remove-last14363
-Ref: -remove-item15093
-Ref: -non-nil15493
-Ref: -slice15775
-Ref: -take16304
-Ref: -take-last16722
-Ref: -drop17159
-Ref: -drop-last17606
-Ref: -take-while18038
-Ref: -drop-while18665
-Ref: -select-by-indices19298
-Ref: -select-columns19809
-Ref: -select-column20512
-Node: List to list20975
-Ref: -keep21172
-Ref: -concat21748
-Ref: -flatten22276
-Ref: -flatten-n23038
-Ref: -replace23422
-Ref: -replace-first23883
-Ref: -replace-last24378
-Ref: -insert-at24866
-Ref: -replace-at25191
-Ref: -update-at25578
-Ref: -remove-at26119
-Ref: -remove-at-indices26746
-Node: Reductions27436
-Ref: -reduce-from27637
-Ref: -reduce-r-from28361
-Ref: -reduce29624
-Ref: -reduce-r30375
-Ref: -reductions-from31653
-Ref: -reductions-r-from32459
-Ref: -reductions33289
-Ref: -reductions-r34000
-Ref: -count34745
-Ref: -sum34975
-Ref: -running-sum35163
-Ref: -product35484
-Ref: -running-product35692
-Ref: -inits36033
-Ref: -tails36278
-Ref: -common-prefix36523
-Ref: -common-suffix36817
-Ref: -min37111
-Ref: -min-by37337
-Ref: -max37858
-Ref: -max-by38083
-Ref: -frequencies38609
-Node: Unfolding39224
-Ref: -iterate39470
-Ref: -unfold39917
-Ref: -repeat40722
-Ref: -cycle41006
-Node: Predicates41403
-Ref: -some41585
-Ref: -every42014
-Ref: -any?42728
-Ref: -all?43077
-Ref: -none?43819
-Ref: -only-some?44139
-Ref: -contains?44684
-Ref: -is-prefix?45190
-Ref: -is-suffix?45522
-Ref: -is-infix?45854
-Ref: -cons-pair?46214
-Node: Partitioning46545
-Ref: -split-at46738
-Ref: -split-with47402
-Ref: -split-on48042
-Ref: -split-when48713
-Ref: -separate49356
-Ref: -partition49890
-Ref: -partition-all50339
-Ref: -partition-in-steps50764
-Ref: -partition-all-in-steps51310
-Ref: -partition-by51824
-Ref: -partition-by-header52202
-Ref: -partition-after-pred52803
-Ref: -partition-before-pred53256
-Ref: -partition-before-item53641
-Ref: -partition-after-item53948
-Ref: -group-by54250
-Node: Indexing54683
-Ref: -elem-index54890
-Ref: -elem-indices55377
-Ref: -find-index55836
-Ref: -find-last-index56505
-Ref: -find-indices57156
-Ref: -grade-up57918
-Ref: -grade-down58325
-Node: Set operations58739
-Ref: -union58927
-Ref: -difference59357
-Ref: -intersection59785
-Ref: -powerset60214
-Ref: -permutations60491
-Ref: -distinct60929
-Ref: -same-items?61323
-Node: Other list operations61932
-Ref: -rotate62162
-Ref: -cons*62515
-Ref: -snoc62937
-Ref: -interpose63349
-Ref: -interleave63643
-Ref: -iota64009
-Ref: -zip-with64492
-Ref: -zip-pair65300
-Ref: -zip-lists65866
-Ref: -zip-lists-fill66664
-Ref: -zip67374
-Ref: -zip-fill68401
-Ref: -unzip-lists69315
-Ref: -unzip69938
-Ref: -pad70931
-Ref: -table71416
-Ref: -table-flat72202
-Ref: -first73207
-Ref: -last73740
-Ref: -first-item74086
-Ref: -second-item74498
-Ref: -third-item74915
-Ref: -fourth-item75290
-Ref: -fifth-item75668
-Ref: -last-item76043
-Ref: -butlast76404
-Ref: -sort76649
-Ref: -list77143
-Ref: -fix77712
-Node: Tree operations78201
-Ref: -tree-seq78402
-Ref: -tree-map79263
-Ref: -tree-map-nodes79703
-Ref: -tree-reduce80567
-Ref: -tree-reduce-from81449
-Ref: -tree-mapreduce82049
-Ref: -tree-mapreduce-from82908
-Ref: -clone84193
-Node: Threading macros84531
-Ref: ->84761
-Ref: ->>85249
-Ref: -->85752
-Ref: -as->86309
-Ref: -some->86763
-Ref: -some->>87148
-Ref: -some-->87595
-Ref: -doto88162
-Node: Binding88715
-Ref: -when-let88927
-Ref: -when-let*89388
-Ref: -if-let89917
-Ref: -if-let*90283
-Ref: -let90906
-Ref: -let*96996
-Ref: -lambda97933
-Ref: -setq98739
-Node: Side effects99540
-Ref: -each99739
-Ref: -each-while100266
-Ref: -each-indexed100886
-Ref: -each-r101478
-Ref: -each-r-while101920
-Ref: -dotimes102564
-Node: Destructive operations103117
-Ref: !cons103340
-Ref: !cdr103544
-Node: Function combinators103737
-Ref: -partial103946
-Ref: -rpartial104464
-Ref: -juxt105112
-Ref: -compose105564
-Ref: -applify106171
-Ref: -on106601
-Ref: -flip107373
-Ref: -rotate-args107897
-Ref: -const108526
-Ref: -cut108868
-Ref: -not109348
-Ref: -orfn109892
-Ref: -andfn110685
-Ref: -iteratefn111472
-Ref: -fixfn112174
-Ref: -prodfn113748
-Node: Development114899
-Node: Contribute115193
-Node: Contributors116210
-Node: FDL118308
-Node: GPL143633
-Node: Index181387
+Node: Sublist selection12293
+Ref: -filter12491
+Ref: -remove13044
+Ref: -remove-first13593
+Ref: -remove-last14441
+Ref: -remove-item15171
+Ref: -non-nil15571
+Ref: -slice15853
+Ref: -take16382
+Ref: -take-last16800
+Ref: -drop17237
+Ref: -drop-last17684
+Ref: -take-while18116
+Ref: -drop-while18743
+Ref: -select-by-indices19376
+Ref: -select-columns19887
+Ref: -select-column20590
+Node: List to list21053
+Ref: -keep21250
+Ref: -concat21826
+Ref: -flatten22606
+Ref: -flatten-n23368
+Ref: -replace23752
+Ref: -replace-first24213
+Ref: -replace-last24708
+Ref: -insert-at25196
+Ref: -replace-at25521
+Ref: -update-at25908
+Ref: -remove-at26449
+Ref: -remove-at-indices27076
+Node: Reductions27766
+Ref: -reduce-from27967
+Ref: -reduce-r-from28691
+Ref: -reduce29954
+Ref: -reduce-r30705
+Ref: -reductions-from31983
+Ref: -reductions-r-from32789
+Ref: -reductions33619
+Ref: -reductions-r34330
+Ref: -count35075
+Ref: -sum35305
+Ref: -running-sum35493
+Ref: -product35814
+Ref: -running-product36022
+Ref: -inits36363
+Ref: -tails36608
+Ref: -common-prefix36853
+Ref: -common-suffix37147
+Ref: -min37441
+Ref: -min-by37667
+Ref: -max38188
+Ref: -max-by38413
+Ref: -frequencies38939
+Node: Unfolding39554
+Ref: -iterate39800
+Ref: -unfold40247
+Ref: -repeat41052
+Ref: -cycle41336
+Node: Predicates41733
+Ref: -some41915
+Ref: -every42344
+Ref: -any?43058
+Ref: -all?43407
+Ref: -none?44149
+Ref: -only-some?44469
+Ref: -contains?45014
+Ref: -is-prefix?45520
+Ref: -is-suffix?45852
+Ref: -is-infix?46184
+Ref: -cons-pair?46544
+Node: Partitioning46875
+Ref: -split-at47068
+Ref: -split-with47732
+Ref: -split-on48372
+Ref: -split-when49043
+Ref: -separate49686
+Ref: -partition50220
+Ref: -partition-all50669
+Ref: -partition-in-steps51094
+Ref: -partition-all-in-steps51640
+Ref: -partition-by52154
+Ref: -partition-by-header52532
+Ref: -partition-after-pred53133
+Ref: -partition-before-pred53586
+Ref: -partition-before-item53971
+Ref: -partition-after-item54278
+Ref: -group-by54580
+Node: Indexing55013
+Ref: -elem-index55220
+Ref: -elem-indices55707
+Ref: -find-index56166
+Ref: -find-last-index56835
+Ref: -find-indices57486
+Ref: -grade-up58248
+Ref: -grade-down58655
+Node: Set operations59069
+Ref: -union59257
+Ref: -difference59687
+Ref: -intersection60115
+Ref: -powerset60544
+Ref: -permutations60821
+Ref: -distinct61259
+Ref: -same-items?61653
+Node: Other list operations62262
+Ref: -rotate62492
+Ref: -cons*62845
+Ref: -snoc63267
+Ref: -interpose63679
+Ref: -interleave63973
+Ref: -iota64339
+Ref: -zip-with64822
+Ref: -zip-pair65630
+Ref: -zip-lists66196
+Ref: -zip-lists-fill66994
+Ref: -zip67704
+Ref: -zip-fill68731
+Ref: -unzip-lists69645
+Ref: -unzip70268
+Ref: -pad71261
+Ref: -table71746
+Ref: -table-flat72532
+Ref: -first73537
+Ref: -last74070
+Ref: -first-item74416
+Ref: -second-item74828
+Ref: -third-item75245
+Ref: -fourth-item75620
+Ref: -fifth-item75998
+Ref: -last-item76373
+Ref: -butlast76734
+Ref: -sort76979
+Ref: -list77473
+Ref: -fix78042
+Node: Tree operations78531
+Ref: -tree-seq78732
+Ref: -tree-map79593
+Ref: -tree-map-nodes80033
+Ref: -tree-reduce80897
+Ref: -tree-reduce-from81779
+Ref: -tree-mapreduce82379
+Ref: -tree-mapreduce-from83238
+Ref: -clone84523
+Node: Threading macros84861
+Ref: ->85091
+Ref: ->>85579
+Ref: -->86082
+Ref: -as->86639
+Ref: -some->87093
+Ref: -some->>87478
+Ref: -some-->87925
+Ref: -doto88492
+Node: Binding89045
+Ref: -when-let89257
+Ref: -when-let*89718
+Ref: -if-let90247
+Ref: -if-let*90613
+Ref: -let91236
+Ref: -let*97326
+Ref: -lambda98263
+Ref: -setq99069
+Node: Side effects99870
+Ref: -each100069
+Ref: -each-while100596
+Ref: -each-indexed101216
+Ref: -each-r101808
+Ref: -each-r-while102250
+Ref: -dotimes102894
+Node: Destructive operations103447
+Ref: !cons103670
+Ref: !cdr103874
+Node: Function combinators104067
+Ref: -partial104276
+Ref: -rpartial104794
+Ref: -juxt105442
+Ref: -compose105894
+Ref: -applify106501
+Ref: -on106931
+Ref: -flip107703
+Ref: -rotate-args108227
+Ref: -const108856
+Ref: -cut109198
+Ref: -not109678
+Ref: -orfn110222
+Ref: -andfn111015
+Ref: -iteratefn111802
+Ref: -fixfn112504
+Ref: -prodfn114078
+Node: Development115229
+Node: Contribute115523
+Node: Contributors116540
+Node: FDL118638
+Node: GPL143963
+Node: Index181717
 
 End Tag Table
 
