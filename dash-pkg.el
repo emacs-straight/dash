@@ -1,2 +1,2 @@
-;; Generated package description from dash.el  -*- no-byte-compile: t -*-
-(define-package "dash" "2.20.0.0.20251016.104741" "A modern list library for Emacs" '((emacs "24")) :commit "fb443e7a6e660ba849cafcd01021d9aac3ac6764" :authors '(("Magnar Sveen" . "magnars@gmail.com")) :maintainer '("Basil L. Contovounesios" . "basil@contovou.net") :keywords '("extensions" "lisp") :url "https://github.com/magnars/dash.el")
+;; Generated package description from dash.el  -*- no-byte-compile: t; lexical-binding:t -*-
+(define-package "dash" "2.20.0.0.20260221.134621" "A modern list library for Emacs" '((emacs "24")) :commit "d3a84021dbe48dba63b52ef7665651e0cf02e915" :authors '(("Magnar Sveen" . "magnars@gmail.com")) :maintainer '("Basil L. Contovounesios" . "basil@contovou.net") :keywords '("extensions" "lisp") :url "https://github.com/magnars/dash.el")

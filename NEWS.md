@@ -1,10 +1,17 @@
 # Dash NEWS -- history of user-visible changes
 
-Copyright (C) 2012-2025 Free Software Foundation, Inc.
+Copyright (C) 2012-2026 Free Software Foundation, Inc.
 
 See the end of the file for license conditions.
 
 ## Change log
+
+### From 2.20.0 to ?.?.?
+
+#### Fixes
+
+- The `-cycle` function is no longer marked as `pure`, as it returns a
+  copy of its argument (#405).
 
 ### From 2.19.1 to 2.20.0
 
@@ -42,7 +49,7 @@ See the end of the file for license conditions.
   immutable constant, and thus unsafe to modify destructively.  The
   functions in question are: `-clone`, `-cons*`, `-drop-last`,
   `-interleave`, `-interpose`, `-iota`, `-non-nil`, `-repeat`,
-  `-slice`, `-snoc`, `-split-at`, `-take`, `-take-last`.
+  `-slice`, `-snoc`, `-split-at`, `-take`, `-take-last` (#405).
 
 #### New features
 
@@ -254,7 +261,7 @@ This release retired Emacs 23 support.
 - Added `-cycle`, `-pad`, `-annotate`, and `-zip-fill` (Steve Lamb).
 - Added `-table`, `-table-flat` (finite Cartesian product).
 - Added `-flatten-n`.
-- `-slice` now supports a "step" argument.
+- `-slice` now supports a “step” argument.
 - Added functional combinators `-iteratefn` and `-prodfn`.
 - Added `-replace`, `-splice`, and `-splice-list` which generalize `-replace-at`
   and `-insert-at`.
